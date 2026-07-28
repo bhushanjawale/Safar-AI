@@ -1,10 +1,6 @@
 # 🌍 Safar AI – AI-Powered Travel Planning Web Application
 
 <p align="center">
-  <img src="screenshots/banner.png" alt="Safar AI Banner" width="100%">
-</p>
-
-<p align="center">
 AI-powered travel planning platform built using Flask, Firebase, Google Gemini AI, and Groq AI.
 </p>
 
@@ -51,7 +47,6 @@ The application generates personalized itineraries, recommends destinations, sea
 ```text
 Safar-AI/
 │
-├── assets/
 ├── css/
 ├── js/
 ├── routes/
@@ -152,25 +147,9 @@ http://127.0.0.1:5000
 
 ---
 
-# 📸 Application Screenshots
-
-| Home | AI Planner |
-|------|------------|
-| ![](screenshots/home.png) | ![](screenshots/planner.png) |
-
-| Flight Search | Hotel Search |
-|---------------|--------------|
-| ![](screenshots/flights.png) | ![](screenshots/hotels.png) |
-
-| Chat Assistant | Wishlist |
-|---------------|-----------|
-| ![](screenshots/chat.png) | ![](screenshots/wishlist.png) |
-
----
-
 # 🔮 Future Enhancements
 
-- 🎤 Voice-based AI Assistant
+- 💭 AI Based ChatBot Assistant
 - 🌎 Multi-language Support
 - ☁️ Real-time Weather Integration
 - 💰 Smart Budget Optimizer
@@ -182,7 +161,7 @@ http://127.0.0.1:5000
 
 # 👨‍💻 Developer
 
-**Bhushan Sunil Jawale**
+Bhushan Sunil Jawale
 
 ---
 

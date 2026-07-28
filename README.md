@@ -1,139 +1,197 @@
-🌍 Safar AI – AI-Powered Travel Planning Web Application
-📌 Project Overview
+# 🌍 Safar AI – AI-Powered Travel Planning Web Application
 
-Safar AI is an AI-powered travel planning web application that helps users plan trips quickly and efficiently. It provides personalized travel itineraries, destination recommendations, AI travel assistance, flight and hotel search, and wishlist management through an easy-to-use interface.
+<p align="center">
+  <img src="screenshots/banner.png" alt="Safar AI Banner" width="100%">
+</p>
 
-The application combines Google Gemini AI, Groq LLM, Firebase, and Flask to provide intelligent travel planning for users.
+<p align="center">
+AI-powered travel planning platform built using Flask, Firebase, Google Gemini AI, and Groq AI.
+</p>
 
-✨ Features
-🔐 User Authentication (Firebase)
-🤖 AI Trip Planner
-💬 AI Travel Chat Assistant
-🗺️ Personalized Travel Itineraries
-✈️ Flight Search
-🏨 Hotel Search
-❤️ Wishlist Management
-📍 Nearby Attractions
-🌤️ Destination Recommendations
-📱 Responsive User Interface
-🔥 Firebase Database Integration
-🛠️ Tech Stack
-Frontend
-HTML5
-CSS3
-JavaScript
-Backend
-Python
-Flask
-Database
-Firebase Firestore
-Authentication
-Firebase Authentication
-AI Services
-Google Gemini API
-Groq API
-Other APIs
-Pexels API
-📂 Project Structure
+---
+
+## 📖 About the Project
+
+Safar AI is an intelligent travel planning web application that helps users plan trips with the power of Artificial Intelligence.
+
+The application generates personalized itineraries, recommends destinations, searches hotels and flights, provides an AI travel assistant, and allows users to manage their wishlist—all through a modern and user-friendly interface.
+
+---
+
+## ✨ Features
+
+- 🔐 Secure User Authentication (Firebase)
+- 🤖 AI Trip Planner
+- 💬 AI Travel Chat Assistant
+- 📍 Destination Recommendations
+- 🗺️ Personalized Day-wise Itinerary
+- ✈️ Flight Search
+- 🏨 Hotel Search
+- ❤️ Wishlist Management
+- 📸 Destination Images (Pexels API)
+- 📱 Responsive Design
+
+---
+
+## 🛠 Tech Stack
+
+| Category | Technology |
+|----------|------------|
+| Frontend | HTML5, CSS3, JavaScript |
+| Backend | Python, Flask |
+| Database | Firebase Firestore |
+| Authentication | Firebase Authentication |
+| AI | Google Gemini API, Groq API |
+| Images | Pexels API |
+
+---
+
+## 📂 Project Structure
+
+```text
 Safar-AI/
 │
 ├── assets/
 ├── css/
-├── images/
 ├── js/
 ├── routes/
 ├── templates/
+├── screenshots/
 ├── app.py
 ├── requirements.txt
 ├── .env
 ├── README.md
 └── ...
-🚀 Installation
-1. Clone Repository
+```
+
+---
+
+## 🚀 Getting Started
+
+### Clone Repository
+
+```bash
 git clone https://github.com/yourusername/Safar-AI.git
 cd Safar-AI
-2. Create Virtual Environment
+```
+
+---
+
+### Create Virtual Environment
 
 Windows
 
+```bash
 python -m venv venv
 venv\Scripts\activate
+```
 
-Linux/Mac
+Linux / macOS
 
+```bash
 python3 -m venv venv
 source venv/bin/activate
-3. Install Dependencies
+```
+
+---
+
+### Install Dependencies
+
+```bash
 pip install -r requirements.txt
-4. Create Environment Variables
+```
 
-Create a .env file.
+---
 
+### Configure Environment Variables
+
+Create a `.env` file inside the project directory.
+
+```env
 GEMINI_API_KEY=YOUR_API_KEY
 GROQ_API_KEY=YOUR_API_KEY
 FIREBASE_API_KEY=YOUR_FIREBASE_KEY
-5. Run Flask Server
+```
+
+---
+
+### Run the Application
+
+```bash
 python app.py
+```
 
-Open
+Open your browser and visit:
 
+```
 http://127.0.0.1:5000
-🧠 How Safar AI Works
-User
-   │
-   ▼
-Frontend (HTML/CSS/JS)
-   │
-   ▼
-Flask Backend
-   │
-   ├────────► Google Gemini AI
-   │
-   ├────────► Groq API
-   │
-   ├────────► Firebase Firestore
-   │
-   └────────► Pexels API
-   │
-   ▼
-Travel Recommendation & Itinerary
-📸 Screenshots
+```
 
-Add screenshots like
+---
 
-Home Page
+# 🏗️ System Architecture
 
-Login Page
+```text
+                User
+                  │
+                  ▼
+      Frontend (HTML/CSS/JavaScript)
+                  │
+                  ▼
+           Flask Backend (Python)
+        ┌─────────┼─────────┐
+        │         │         │
+        ▼         ▼         ▼
+ Google Gemini   Groq   Firebase
+        │                   │
+        └─────────┬─────────┘
+                  ▼
+         Travel Recommendation
+            & AI Itinerary
+```
 
-Dashboard
+---
 
-AI Trip Planner
+# 📸 Application Screenshots
 
-Flight Search
+| Home | AI Planner |
+|------|------------|
+| ![](screenshots/home.png) | ![](screenshots/planner.png) |
 
-Hotel Search
+| Flight Search | Hotel Search |
+|---------------|--------------|
+| ![](screenshots/flights.png) | ![](screenshots/hotels.png) |
 
-Wishlist
+| Chat Assistant | Wishlist |
+|---------------|-----------|
+| ![](screenshots/chat.png) | ![](screenshots/wishlist.png) |
 
-Chat Assistant
+---
 
-Example
+# 🔮 Future Enhancements
 
-![Home](screenshots/home.png)
+- 🎤 Voice-based AI Assistant
+- 🌎 Multi-language Support
+- ☁️ Real-time Weather Integration
+- 💰 Smart Budget Optimizer
+- 📅 Trip Sharing
+- 📄 PDF Itinerary Download
+- 📍 Offline Travel Guide
 
-![Planner](screenshots/planner.png)
-🔮 Future Enhancements
-Voice Assistant
-Multi-language Support
-Real-time Weather Integration
-Budget Optimization
-Offline Itinerary Access
-AI Trip Sharing
-Travel Expense Tracker
+---
 
-👨‍💻 Contributors
-Bhushan Sunil Jawale
+# 👨‍💻 Developer
 
-📜 License
+**Bhushan Sunil Jawale**
 
-This project is developed for educational and learning purposes.
+---
+
+# 📜 License
+
+This project was developed for educational and learning purposes.
+
+---
+
+# ⭐ Support
+
+If you found this project helpful, please consider giving it a **⭐ Star** on GitHub.

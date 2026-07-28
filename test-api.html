@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .test { margin: 10px 0; padding: 10px; border: 1px solid #ddd; }
+        .success { background: #d4edda; }
+        .error { background: #f8d7da; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Safar AI - API Test</h1>
+    
+    <h2>Backend Status</h2>
+    <div id="backend-status" class="test">Checking...</div>
+    
+    <h2>Test Login</h2>
+    <input type="email" id="email" placeholder="Email" value="test@example.com">
+    <input type="password" id="password" placeholder="Password" value="password123">
+    <button onclick="testLogin()">Test Login</button>
+    <div id="login-result" class="test"></div>
+    
+    <h2>Test Signup</h2>
+    <input type="text" id="name" placeholder="Name" value="Test User">
+    <input type="email" id="signup-email" placeholder="Email" value="test@example.com">
+    <input type="password" id="signup-password" placeholder="Password" value="password123">
+    <button onclick="testSignup()">Test Signup</button>
+    <div id="signup-result" class="test"></div>
+    
+    <h2>Test Recommendations (Requires Login)</h2>
+    <button onclick="testRecommendations()">Get Recommendations</button>
+    <div id="recs-result" class="test"></div>
+    
+    <script>
+        const API = 'http://localhost:5000/api';
+        
+        // Check backend
+        fetch(`${API}/user`, { credentials: 'include' })
+            .then(r => {
+                document.getElementById('backend-status').innerHTML = 
+                    `<span class="success">✓ Backend is running on port 5000</span>`;
+            })
+            .catch(e => {
+                document.getElementById('backend-status').innerHTML = 
+                    `<span class="error">✗ Backend not responding: ${e.message}</span>`;
+            });
+        
+        async function testLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const result = document.getElementById('login-result');
+            
+            try {
+                const res = await fetch(`${API}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                result.className = 'test ' + (data.success ? 'success' : 'error');
+                result.innerHTML = JSON.stringify(data, null, 2);
+            } catch (e) {
+                result.className = 'test error';
+                result.innerHTML = 'Error: ' + e.message;
+            }
+        }
+        
+        async function testSignup() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const result = document.getElementById('signup-result');
+            
+            try {
+                const res = await fetch(`${API}/auth/signup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ name, email, password })
+                });
+                const data = await res.json();
+                result.className = 'test ' + (data.success ? 'success' : 'error');
+                result.innerHTML = JSON.stringify(data, null, 2);
+            } catch (e) {
+                result.className = 'test error';
+                result.innerHTML = 'Error: ' + e.message;
+            }
+        }
+        
+        async function testRecommendations() {
+            const result = document.getElementById('recs-result');
+            result.innerHTML = 'Loading...';
+            
+            try {
+                const res = await fetch(`${API}/recommendations`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'
+                });
+                const data = await res.json();
+                result.className = 'test ' + (data.destinations ? 'success' : 'error');
+                result.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (e) {
+                result.className = 'test error';
+                result.innerHTML = 'Error: ' + e.message;
+            }
+        }
+    </script>
+</body>
+</html>

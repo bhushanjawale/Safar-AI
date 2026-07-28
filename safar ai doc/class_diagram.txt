@@ -1,0 +1,391 @@
+
+================================================================================
+                      SAFAR AI — CLASS DIAGRAM
+================================================================================
+
+================================================================================
+  LEGEND
+================================================================================
+
+  +---------------------------+
+  |      ClassName            |   Class
+  +---------------------------+
+  | - privateField : type     |   Attributes
+  | + publicField  : type     |
+  +---------------------------+
+  | + publicMethod() : return |   Methods
+  | - privateMethod(): return |
+  +---------------------------+
+
+  ──────────  Association       (uses / has reference)
+  ◆───────── Composition        (owns / part of)
+  ◇───────── Aggregation        (has / contains)
+  ──────────▷ Dependency        (depends on)
+  ──────────▷ <<uses>>          (calls / invokes)
+
+================================================================================
+  SECTION 1 : FRONTEND CLASSES (JavaScript)
+================================================================================
+
+  ┌─────────────────────────────────────────────────────┐
+  │                     Router                          │
+  │                   js/router.js                      │
+  ├─────────────────────────────────────────────────────┤
+  │ - routes : Object                                   │
+  ├─────────────────────────────────────────────────────┤
+  │ + register(path: string, handler: Function) : void  │
+  │ + navigate(path: string, replace: bool) : void      │
+  │ + handleRoute() : void                              │
+  │ + getCurrentPath() : string                         │
+  └─────────────────────────────────────────────────────┘
+                          │
+                          │ <<uses>>
+                          ▼
+  ┌─────────────────────────────────────────────────────┐
+  │                   AuthManager                       │
+  │                    js/auth.js                       │
+  ├─────────────────────────────────────────────────────┤
+  │ - user        : Object | null                       │
+  │ - wishlist    : Array<string>                       │
+  │ - listeners   : Array<Function>                     │
+  │ - _ready      : boolean                             │
+  │ - _readyResolvers : Array<Function>                 │
+  ├─────────────────────────────────────────────────────┤
+  │ + getUser()              : Promise<Object|null>     │
+  │ + signup(name, email, password, confirm) : Promise  │
+  │ + login(email, password) : Promise<{success,error}> │
+  │ + loginWithGoogle()      : Promise<{success,isNew}> │
+  │ + googleLogin()          : Promise  (alias)         │
+  │ + logout()               : Promise<void>            │
+  │ + completeOnboarding(prefs) : Promise<void>         │
+  │ + toggleWishlist(id)     : Promise<void>            │
+  │ + loadWishlist()         : Promise<void>            │
+  │ + isAuthenticated()      : boolean                  │
+  │ + getUserData()          : Object | null            │
+  │ + isInWishlist(id)       : boolean                  │
+  │ + subscribe(listener)    : void                     │
+  │ - notify()               : void                     │
+  │ - _resolveReady()        : void                     │
+  └─────────────────────────────────────────────────────┘
+                          │
+                          │ <<uses>>
+                          ▼
+  ┌─────────────────────────────────────────────────────┐
+  │                  AuthService                        │
+  │                js/authService.js                    │
+  ├─────────────────────────────────────────────────────┤
+  │ - googleProvider : GoogleAuthProvider               │
+  ├─────────────────────────────────────────────────────┤
+  │ + signupUser(fullName, email, pass, confirm):Promise │
+  │ + loginUser(email, password)          : Promise     │
+  │ + loginWithGoogle()                   : Promise     │
+  │ + logoutUser()                        : Promise     │
+  │ + watchAuthState(callback)            : Unsubscribe │
+  │ + getUserDoc(uid)                     : Promise     │
+  │ + friendlyError(code)                 : string      │
+  │ - createUserDoc(firebaseUser, name)   : Promise     │
+  └─────────────────────────────────────────────────────┘
+
+  ┌─────────────────────────────────────────────────────┐
+  │                   ApiService                        │
+  │                    js/api.js                        │
+  ├─────────────────────────────────────────────────────┤
+  │ - API_URL : string = 'http://localhost:5000/api'    │
+  ├─────────────────────────────────────────────────────┤
+  │ + generateItinerary(src, dest, days, budget,        │
+  │                     onChunk) : Promise              │
+  │ + chatWithAssistant(message)  : Promise             │
+  │ + getRecommendations(prefs)   : Promise             │
+  │ + getNearby(location)         : Promise             │
+  │ + saveTrip(tripData)          : Promise             │
+  │ + getTrips()                  : Promise<Array>      │
+  └─────────────────────────────────────────────────────┘
+
+  ┌─────────────────────────────────────────────────────┐
+  │                  FirebaseConfig                     │
+  │                  js/firebase.js                     │
+  ├─────────────────────────────────────────────────────┤
+  │ - apiKey           : string                         │
+  │ - authDomain       : string                         │
+  │ - projectId        : string                         │
+  │ - storageBucket    : string                         │
+  │ - messagingSenderId: string                         │
+  │ - appId            : string                         │
+  │ - measurementId    : string                         │
+  ├─────────────────────────────────────────────────────┤
+  │ + firebaseAuth : Auth      (exported singleton)     │
+  │ + db           : Firestore (exported singleton)     │
+  └─────────────────────────────────────────────────────┘
+
+================================================================================
+  SECTION 2 : PAGE RENDER CLASSES (Frontend Pages)
+================================================================================
+
+  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+  │  LoginPage   │  │ RegisterPage │  │OnboardingPage│  │   HomePage   │
+  │  pages/      │  │  pages/      │  │  pages/      │  │  pages/      │
+  │  login.js    │  │  register.js │  │ onboarding.js│  │   home.js    │
+  ├──────────────┤  ├──────────────┤  ├──────────────┤  ├──────────────┤
+  │+renderLogin()│  │+renderRegist │  │+renderOnboard│  │+renderHome() │
+  └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘
+
+  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+  │ PlannerPage  │  │ FlightsPage  │  │  HotelsPage  │  │ ExplorePage  │
+  │  pages/      │  │  pages/      │  │  pages/      │  │  pages/      │
+  │  planner.js  │  │  flights.js  │  │   hotels.js  │  │  explore.js  │
+  ├──────────────┤  ├──────────────┤  ├──────────────┤  ├──────────────┤
+  │+renderPlanner│  │+renderFlights│  │+renderHotels │  │+renderExplore│
+  └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘
+
+  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+  │ WishlistPage │  │ ProfilePage  │  │AssistantPage │  │  DealsPage   │
+  │  pages/      │  │  pages/      │  │  pages/      │  │  pages/      │
+  │  wishlist.js │  │  profile.js  │  │ assistant.js │  │   deals.js   │
+  ├──────────────┤  ├──────────────┤  ├──────────────┤  ├──────────────┤
+  │+renderWishlis│  │+renderProfile│  │+renderAssist │  │+renderDeals()│
+  └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘
+
+================================================================================
+  SECTION 3 : BACKEND CLASSES (Python / Flask)
+================================================================================
+
+  ┌─────────────────────────────────────────────────────┐
+  │                   FlaskApp                          │
+  │                 backend/app.py                      │
+  ├─────────────────────────────────────────────────────┤
+  │ - GEMINI_API_KEY  : string                          │
+  │ - GEMINI_URL      : string                          │
+  │ - GEMINI_STREAM_URL : string                        │
+  │ - GROQ_API_KEY    : string                          │
+  │ - GROQ_URL        : string                          │
+  ├─────────────────────────────────────────────────────┤
+  │ + get_recommendations()  : JSON   POST /api/recommendations  │
+  │ + get_nearby()           : JSON   POST /api/nearby           │
+  │ + generate_itinerary()   : Stream POST /api/itinerary/generate│
+  │ + search_flights()       : JSON   POST /api/flights/search   │
+  │ + search_hotels()        : JSON   POST /api/hotels/search    │
+  │ + chat()                 : JSON   POST /api/chat             │
+  │ - groq_chat(messages, model, timeout) : string | None        │
+  │ - gemini(prompt, timeout)             : string | None        │
+  │ - _default_recommendations()          : list                 │
+  │ - _default_nearby()                   : list                 │
+  └─────────────────────────────────────────────────────┘
+                    │                    │
+          <<uses>>  │                    │  <<uses>>
+                    ▼                    ▼
+  ┌──────────────────────┐   ┌──────────────────────────┐
+  │     GeminiService    │   │       GroqService         │
+  │  (Google Gemini AI)  │   │   (Groq LLaMA 3.1 8B)    │
+  ├──────────────────────┤   ├──────────────────────────┤
+  │ model: gemini-3-flash│   │ model: llama-3.1-8b-inst  │
+  │ max_retries: 3       │   │ max_tokens: 1024          │
+  │ timeout: 30s         │   │ temperature: 0.7          │
+  ├──────────────────────┤   ├──────────────────────────┤
+  │ + generate(prompt)   │   │ + chat(messages)  : str   │
+  │ + stream(prompt)     │   │ + timeout: 20s            │
+  └──────────────────────┘   └──────────────────────────┘
+
+================================================================================
+  SECTION 4 : DATA MODEL CLASSES (Firestore Documents)
+================================================================================
+
+  ┌─────────────────────────────────────────────────────┐
+  │                      User                           │
+  │              Firestore: users/{uid}                 │
+  ├─────────────────────────────────────────────────────┤
+  │ + uid         : string  (PK)                        │
+  │ + email       : string                              │
+  │ + name        : string                              │
+  │ + isNewUser   : boolean                             │
+  │ + createdAt   : timestamp                           │
+  │ + preferences : Preferences  (nested map)           │
+  │ + wishlist    : string[]     (nested array)         │
+  └─────────────────────────────────────────────────────┘
+          ◆ 1                          ◆ 1
+          │                            │
+          ▼ 1                          ▼ N
+  ┌──────────────────────┐   ┌──────────────────────────┐
+  │     Preferences      │   │        Wishlist           │
+  │  (nested map in User)│   │  (nested array in User)   │
+  ├──────────────────────┤   ├──────────────────────────┤
+  │ + location  : string │   │ + id       : string (PK)  │
+  │ + budget    : string │   │ + uid      : string (FK)  │
+  │ + tripStyle : string │   │ + destId   : string       │
+  │ + interests : string[]   │ + name     : string       │
+  │ + offbeat   : boolean│   │ + image    : string (URL) │
+  └──────────────────────┘   │ + category : string       │
+                             │ + addedAt  : timestamp    │
+                             └──────────────────────────┘
+
+  ┌─────────────────────────────────────────────────────┐
+  │                      Trip                           │
+  │              Firestore: trips/{id}                  │
+  ├─────────────────────────────────────────────────────┤
+  │ + id             : string     (PK)                  │
+  │ + user_id        : string     (FK → User.uid)       │
+  │ + destination    : string                           │
+  │ + source         : string                           │
+  │ + days           : number                           │
+  │ + budget         : string                           │
+  │ + itinerary_data : ItineraryData  (nested map)      │
+  │ + status         : string                           │
+  │ + created_at     : timestamp                        │
+  └─────────────────────────────────────────────────────┘
+          ◆ 1
+          │
+          ▼ N
+  ┌─────────────────────────────────────────────────────┐
+  │                  ItineraryData                      │
+  │          (nested map inside Trip)                   │
+  ├─────────────────────────────────────────────────────┤
+  │ + planner_id          : string  (PK)                │
+  │ + trip_id             : string  (FK → Trip.id)      │
+  │ + uid                 : string  (FK → User.uid)     │
+  │ + day_number          : number                      │
+  │ + morning_activity    : string                      │
+  │ + afternoon_activity  : string                      │
+  │ + evening_activity    : string                      │
+  │ + meals               : string | map                │
+  │ + transport           : string                      │
+  │ + cost_estimate       : string                      │
+  │ + tips                : string                      │
+  │ + streaming           : boolean                     │
+  │ + generated_by        : string                      │
+  └─────────────────────────────────────────────────────┘
+
+  ┌─────────────────────────────────────────────────────┐
+  │                Flight  ⚡ TRANSIENT                  │
+  │              (UI only — not persisted)              │
+  ├─────────────────────────────────────────────────────┤
+  │ + flight_id      : string  (PK)                     │
+  │ + trip_id        : string  (FK → Trip.id)           │
+  │ + uid            : string  (FK → User.uid)          │
+  │ + airline        : string                           │
+  │ + flight_number  : string                           │
+  │ + source         : string                           │
+  │ + destination    : string                           │
+  │ + departure_time : string                           │
+  │ + arrival_time   : string                           │
+  │ + duration       : string                           │
+  │ + price          : number  (INR)                    │
+  │ + class          : string                           │
+  │ + generated_by   : string                           │
+  │ + transient      : boolean = true                   │
+  └─────────────────────────────────────────────────────┘
+
+  ┌─────────────────────────────────────────────────────┐
+  │                 Hotel  ⚡ TRANSIENT                  │
+  │              (UI only — not persisted)              │
+  ├─────────────────────────────────────────────────────┤
+  │ + hotel_id        : string  (PK)                    │
+  │ + trip_id         : string  (FK → Trip.id)          │
+  │ + uid             : string  (FK → User.uid)         │
+  │ + hotel_name      : string                          │
+  │ + location        : string                          │
+  │ + rating          : float                           │
+  │ + price_per_night : number  (INR)                   │
+  │ + amenities       : string[]                        │
+  │ + room_type       : string                          │
+  │ + total_cost      : number                          │
+  │ + generated_by    : string                          │
+  │ + transient       : boolean = true                  │
+  └─────────────────────────────────────────────────────┘
+
+  ┌─────────────────────────────────────────────────────┐
+  │             ChatMessage  🧠 SESSION                  │
+  │              (session memory — not persisted)       │
+  ├─────────────────────────────────────────────────────┤
+  │ + chat_id      : string  (PK)                       │
+  │ + uid          : string  (FK → User.uid)            │
+  │ + user_message : string                             │
+  │ + ai_response  : string                             │
+  │ + timestamp    : timestamp                          │
+  │ + session_id   : string                             │
+  │ + provider     : string  (Groq | Gemini)            │
+  └─────────────────────────────────────────────────────┘
+
+================================================================================
+  SECTION 5 : FULL CLASS RELATIONSHIP DIAGRAM
+================================================================================
+
+                         ┌──────────────┐
+                         │  FirebaseConfig│
+                         └──────┬───────┘
+                                │ initializes
+                    ┌───────────┴───────────┐
+                    ▼                       ▼
+             firebaseAuth                  db
+                    │                       │
+                    ▼                       ▼
+           ┌──────────────┐       ┌──────────────────┐
+           │  AuthService │       │   Firestore DB   │
+           └──────┬───────┘       └────────┬─────────┘
+                  │ <<uses>>               │ stores
+                  ▼                        ▼
+           ┌──────────────┐       ┌────────────────────┐
+           │  AuthManager │       │  User              │
+           └──────┬───────┘       │  ├── Preferences   │
+                  │               │  └── Wishlist[]     │
+                  │ manages       ├────────────────────┤
+                  │               │  Trip              │
+                  ▼               │  └── ItineraryData │
+           ┌──────────────┐       └────────────────────┘
+           │    Router    │
+           └──────┬───────┘
+                  │ routes to
+                  ▼
+        ┌─────────────────────────────────────────┐
+        │           Page Renderers                │
+        │  Login | Register | Onboarding | Home   │
+        │  Planner | Flights | Hotels | Explore   │
+        │  Wishlist | Profile | Assistant | Deals │
+        └──────────────┬──────────────────────────┘
+                       │ <<uses>>
+                       ▼
+               ┌──────────────┐
+               │  ApiService  │
+               └──────┬───────┘
+                      │ HTTP calls
+                      ▼
+               ┌──────────────────────────────────┐
+               │         FlaskApp (Backend)        │
+               └──────┬───────────────────────────┘
+                      │
+           ┌──────────┴──────────┐
+           ▼                     ▼
+   ┌──────────────┐     ┌──────────────────┐
+   │ GeminiService│     │   GroqService    │
+   │  (Itinerary) │     │ (Flights/Hotels/ │
+   │  (Recommend) │     │    Chat)         │
+   └──────────────┘     └──────────────────┘
+
+================================================================================
+  SECTION 6 : CLASS RELATIONSHIPS SUMMARY
+================================================================================
+
+  CLASS               RELATIONSHIP     CLASS
+  ──────────────────────────────────────────────────────────────────────
+  FirebaseConfig      initializes ──►  AuthService (firebaseAuth)
+  FirebaseConfig      initializes ──►  ApiService  (db)
+  AuthService         <<uses>> ──────► FirebaseAuth (Firebase SDK)
+  AuthManager         <<uses>> ──────► AuthService
+  AuthManager         <<uses>> ──────► Firestore (db)
+  Router              <<uses>> ──────► AuthManager (getUser)
+  Router              routes to ─────► Page Renderers (all pages)
+  Page Renderers      <<uses>> ──────► AuthManager
+  Page Renderers      <<uses>> ──────► ApiService
+  ApiService          <<uses>> ──────► FlaskApp (HTTP)
+  ApiService          <<uses>> ──────► Firestore (saveTrip, getTrips)
+  FlaskApp            <<uses>> ──────► GeminiService
+  FlaskApp            <<uses>> ──────► GroqService
+  User                ◆ owns ────────► Preferences  (1:1 composition)
+  User                ◆ owns ────────► Wishlist[]   (1:N composition)
+  User                1 ──────────── N Trip
+  Trip                ◆ owns ────────► ItineraryData (1:N composition)
+  ItineraryData       1 ──────────── N Flight        (transient)
+  ItineraryData       1 ──────────── N Hotel         (transient)
+  User                1 ──────────── N ChatMessage   (session only)
+
+================================================================================
+                      END OF SAFAR AI CLASS DIAGRAM
+================================================================================

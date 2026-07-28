@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Safar AI — ERD</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0f0f1a; font-family: 'Segoe UI', sans-serif; overflow-x: auto; }
+  h1 { text-align: center; color: #fff; padding: 24px; font-size: 22px; letter-spacing: 2px; background: #1a1a2e; border-bottom: 2px solid #e94560; }
+  svg { display: block; margin: 0 auto; }
+
+  /* Entity boxes */
+  .entity rect { rx: 8; ry: 8; }
+  .entity-header { font-weight: bold; font-size: 13px; fill: #fff; }
+  .entity-field { font-size: 11px; fill: #ccc; }
+  .pk { fill: #ffd700 !important; font-weight: bold; }
+  .fk { fill: #90caf9 !important; }
+
+  /* Relationship diamond */
+  .diamond { fill: #e94560; stroke: #fff; stroke-width: 1.5; }
+  .rel-label { font-size: 11px; fill: #fff; font-weight: bold; }
+
+  /* Cardinality */
+  .cardinality { font-size: 11px; fill: #ffd700; font-weight: bold; }
+
+  /* Arrow lines */
+  .flow-line { stroke-width: 2; fill: none; marker-end: url(#arrow); }
+
+  .color-users     { fill: #1565c0; stroke: #90caf9; stroke-width: 2; }
+  .color-pref      { fill: #1b5e20; stroke: #a5d6a7; stroke-width: 2; }
+  .color-wishlist  { fill: #4a148c; stroke: #ce93d8; stroke-width: 2; }
+  .color-trips     { fill: #e65100; stroke: #ffcc80; stroke-width: 2; }
+  .color-chat      { fill: #880e4f; stroke: #f48fb1; stroke-width: 2; }
+  .color-planner   { fill: #006064; stroke: #80deea; stroke-width: 2; }
+  .color-flight    { fill: #37474f; stroke: #b0bec5; stroke-width: 2; }
+  .color-hotel     { fill: #3e2723; stroke: #bcaaa4; stroke-width: 2; }
+
+  .header-users    { fill: #1976d2; }
+  .header-pref     { fill: #2e7d32; }
+  .header-wishlist { fill: #6a1b9a; }
+  .header-trips    { fill: #ef6c00; }
+  .header-chat     { fill: #ad1457; }
+  .header-planner  { fill: #00838f; }
+  .header-flight   { fill: #546e7a; }
+  .header-hotel    { fill: #5d4037; }
+</style>
+</head>
+<body>
+<h1>⟡ SAFAR AI — Entity Relationship Diagram</h1>
+
+<svg width="1300" height="1100" viewBox="0 0 1300 1100">
+  <defs>
+    <!-- Arrow marker -->
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#e94560" />
+    </marker>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#90caf9" />
+    </marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#a5d6a7" />
+    </marker>
+    <marker id="arrow-orange" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ffcc80" />
+    </marker>
+    <marker id="arrow-purple" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ce93d8" />
+    </marker>
+    <marker id="arrow-pink" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#f48fb1" />
+    </marker>
+    <marker id="arrow-cyan" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#80deea" />
+    </marker>
+    <marker id="arrow-grey" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#b0bec5" />
+    </marker>
+    <marker id="arrow-brown" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#bcaaa4" />
+    </marker>
+  </defs>
+
+  <!-- ===================== USERS (center top) ===================== -->
+  <g class="entity">
+    <rect x="490" y="30" width="180" height="145" rx="8" class="color-users"/>
+    <rect x="490" y="30" width="180" height="28" rx="8" class="header-users"/>
+    <rect x="490" y="50" width="180" height="8" class="header-users"/>
+    <text x="580" y="49" text-anchor="middle" class="entity-header">users</text>
+    <text x="500" y="76" class="entity-field pk">PK  uid</text>
+    <text x="500" y="93" class="entity-field">    email</text>
+    <text x="500" y="110" class="entity-field">    name</text>
+    <text x="500" y="127" class="entity-field">    isNewUser</text>
+    <text x="500" y="144" class="entity-field">    createdAt</text>
+    <text x="500" y="161" class="entity-field">    provider</text>
+  </g>
+
+  <!-- ===================== RELATIONSHIP DIAMONDS ===================== -->
+
+  <!-- users -> preferences -->
+  <polygon points="170,245 210,265 170,285 130,265" class="diamond"/>
+  <text x="170" y="269" text-anchor="middle" class="rel-label">has</text>
+
+  <!-- users -> wishlist -->
+  <polygon points="370,245 410,265 370,285 330,265" class="diamond"/>
+  <text x="370" y="269" text-anchor="middle" class="rel-label">has</text>
+
+  <!-- users -> trips -->
+  <polygon points="580,245 620,265 580,285 540,265" class="diamond"/>
+  <text x="580" y="269" text-anchor="middle" class="rel-label">has</text>
+
+  <!-- users -> chat -->
+  <polygon points="820,245 860,265 820,285 780,265" class="diamond"/>
+  <text x="820" y="269" text-anchor="middle" class="rel-label">has</text>
+
+  <!-- trips -> ai_trip_planner -->
+  <polygon points="580,530 620,550 580,570 540,550" class="diamond"/>
+  <text x="580" y="554" text-anchor="middle" class="rel-label">generates</text>
+
+  <!-- ai_trip_planner -> flight -->
+  <polygon points="370,800 410,820 370,840 330,820" class="diamond"/>
+  <text x="370" y="824" text-anchor="middle" class="rel-label">has</text>
+
+  <!-- ai_trip_planner -> hotel -->
+  <polygon points="790,800 830,820 790,840 750,820" class="diamond"/>
+  <text x="790" y="824" text-anchor="middle" class="rel-label">has</text>
+
+  <!-- ===================== FLOW LINES (users -> diamonds) ===================== -->
+
+  <!-- users -> preferences diamond -->
+  <line x1="490" y1="103" x2="210" y2="265" stroke="#90caf9" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrow-blue)"/>
+  <text x="320" y="175" class="cardinality">1</text>
+
+  <!-- users -> wishlist diamond -->
+  <line x1="510" y1="175" x2="410" y2="245" stroke="#ce93d8" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrow-purple)"/>
+  <text x="450" y="210" class="cardinality">1</text>
+
+  <!-- users -> trips diamond -->
+  <line x1="580" y1="175" x2="580" y2="245" stroke="#ffcc80" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrow-orange)"/>
+  <text x="588" y="215" class="cardinality">1</text>
+
+  <!-- users -> chat diamond -->
+  <line x1="650" y1="103" x2="780" y2="265" stroke="#f48fb1" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrow-pink)"/>
+  <text x="730" y="175" class="cardinality">1</text>
+
+  <!-- ===================== PREFERENCES ===================== -->
+  <g class="entity">
+    <rect x="60" y="310" width="160" height="145" rx="8" class="color-pref"/>
+    <rect x="60" y="310" width="160" height="28" rx="8" class="header-pref"/>
+    <rect x="60" y="330" width="160" height="8" class="header-pref"/>
+    <text x="140" y="329" text-anchor="middle" class="entity-header">preferences</text>
+    <text x="70" y="356" class="entity-field fk">FK  uid</text>
+    <text x="70" y="373" class="entity-field">    location</text>
+    <text x="70" y="390" class="entity-field">    budget</text>
+    <text x="70" y="407" class="entity-field">    tripStyle</text>
+    <text x="70" y="424" class="entity-field">    interests</text>
+    <text x="70" y="441" class="entity-field">    offbeat</text>
+  </g>
+  <!-- diamond -> preferences -->
+  <line x1="170" y1="285" x2="140" y2="310" stroke="#a5d6a7" stroke-width="2" marker-end="url(#arrow-green)"/>
+  <text x="115" y="305" class="cardinality">1</text>
+
+  <!-- ===================== WISHLIST ===================== -->
+  <g class="entity">
+    <rect x="270" y="310" width="160" height="162" rx="8" class="color-wishlist"/>
+    <rect x="270" y="310" width="160" height="28" rx="8" class="header-wishlist"/>
+    <rect x="270" y="330" width="160" height="8" class="header-wishlist"/>
+    <text x="350" y="329" text-anchor="middle" class="entity-header">wishlist</text>
+    <text x="280" y="356" class="entity-field fk">FK  uid</text>
+    <text x="280" y="373" class="entity-field pk">PK  id</text>
+    <text x="280" y="390" class="entity-field">    destId</text>
+    <text x="280" y="407" class="entity-field">    name</text>
+    <text x="280" y="424" class="entity-field">    image</text>
+    <text x="280" y="441" class="entity-field">    category</text>
+    <text x="280" y="458" class="entity-field">    addedAt</text>
+  </g>
+  <!-- diamond -> wishlist -->
+  <line x1="370" y1="285" x2="350" y2="310" stroke="#ce93d8" stroke-width="2" marker-end="url(#arrow-purple)"/>
+  <text x="325" y="305" class="cardinality">*</text>
+
+  <!-- ===================== TRIPS ===================== -->
+  <g class="entity">
+    <rect x="490" y="310" width="180" height="180" rx="8" class="color-trips"/>
+    <rect x="490" y="310" width="180" height="28" rx="8" class="header-trips"/>
+    <rect x="490" y="330" width="180" height="8" class="header-trips"/>
+    <text x="580" y="329" text-anchor="middle" class="entity-header">trips</text>
+    <text x="500" y="356" class="entity-field fk">FK  uid</text>
+    <text x="500" y="373" class="entity-field pk">PK  id</text>
+    <text x="500" y="390" class="entity-field">    destination</text>
+    <text x="500" y="407" class="entity-field">    source</text>
+    <text x="500" y="424" class="entity-field">    days</text>
+    <text x="500" y="441" class="entity-field">    budget</text>
+    <text x="500" y="458" class="entity-field">    status</text>
+    <text x="500" y="475" class="entity-field">    created_at</text>
+  </g>
+  <!-- diamond -> trips -->
+  <line x1="580" y1="285" x2="580" y2="310" stroke="#ffcc80" stroke-width="2" marker-end="url(#arrow-orange)"/>
+  <text x="588" y="305" class="cardinality">*</text>
+
+  <!-- ===================== CHAT ASSISTANT ===================== -->
+  <g class="entity">
+    <rect x="730" y="310" width="180" height="162" rx="8" class="color-chat"/>
+    <rect x="730" y="310" width="180" height="28" rx="8" class="header-chat"/>
+    <rect x="730" y="330" width="180" height="8" class="header-chat"/>
+    <text x="820" y="329" text-anchor="middle" class="entity-header">chat_assistant</text>
+    <text x="740" y="356" class="entity-field fk">FK  uid</text>
+    <text x="740" y="373" class="entity-field pk">PK  chat_id</text>
+    <text x="740" y="390" class="entity-field">    user_message</text>
+    <text x="740" y="407" class="entity-field">    ai_response</text>
+    <text x="740" y="424" class="entity-field">    timestamp</text>
+    <text x="740" y="441" class="entity-field">    session_id</text>
+    <text x="740" y="458" class="entity-field">    provider</text>
+  </g>
+  <!-- diamond -> chat -->
+  <line x1="820" y1="285" x2="820" y2="310" stroke="#f48fb1" stroke-width="2" marker-end="url(#arrow-pink)"/>
+  <text x="828" y="305" class="cardinality">*</text>
+
+  <!-- ===================== trips -> ai_trip_planner ===================== -->
+  <line x1="580" y1="490" x2="580" y2="530" stroke="#80deea" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrow-cyan)"/>
+  <text x="588" y="518" class="cardinality">1</text>
+
+  <!-- ===================== AI TRIP PLANNER ===================== -->
+  <g class="entity">
+    <rect x="460" y="590" width="240" height="210" rx="8" class="color-planner"/>
+    <rect x="460" y="590" width="240" height="28" rx="8" class="header-planner"/>
+    <rect x="460" y="610" width="240" height="8" class="header-planner"/>
+    <text x="580" y="609" text-anchor="middle" class="entity-header">ai_trip_planner</text>
+    <text x="470" y="636" class="entity-field pk">PK  planner_id</text>
+    <text x="470" y="653" class="entity-field fk">FK  trip_id</text>
+    <text x="470" y="670" class="entity-field fk">FK  uid</text>
+    <text x="470" y="687" class="entity-field">    day_number</text>
+    <text x="470" y="704" class="entity-field">    morning_activity</text>
+    <text x="470" y="721" class="entity-field">    afternoon_activity</text>
+    <text x="470" y="738" class="entity-field">    evening_activity</text>
+    <text x="470" y="755" class="entity-field">    meals</text>
+    <text x="470" y="772" class="entity-field">    transport</text>
+    <text x="470" y="789" class="entity-field">    cost_estimate</text>
+  </g>
+
+  <!-- diamond -> ai_trip_planner -->
+  <line x1="580" y1="570" x2="580" y2="590" stroke="#80deea" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+  <text x="588" y="585" class="cardinality">*</text>
+
+  <!-- ===================== ai_trip_planner -> flight diamond ===================== -->
+  <line x1="460" y1="720" x2="410" y2="820" stroke="#b0bec5" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrow-grey)"/>
+  <text x="415" y="775" class="cardinality">1</text>
+
+  <!-- ===================== ai_trip_planner -> hotel diamond ===================== -->
+  <line x1="700" y1="720" x2="750" y2="820" stroke="#bcaaa4" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrow-brown)"/>
+  <text x="740" y="775" class="cardinality">1</text>
+
+  <!-- ===================== FLIGHT ===================== -->
+  <g class="entity">
+    <rect x="100" y="860" width="200" height="210" rx="8" class="color-flight"/>
+    <rect x="100" y="860" width="200" height="28" rx="8" class="header-flight"/>
+    <rect x="100" y="880" width="200" height="8" class="header-flight"/>
+    <text x="200" y="879" text-anchor="middle" class="entity-header">flight</text>
+    <text x="110" y="906" class="entity-field pk">PK  flight_id</text>
+    <text x="110" y="923" class="entity-field fk">FK  trip_id</text>
+    <text x="110" y="940" class="entity-field fk">FK  uid</text>
+    <text x="110" y="957" class="entity-field">    airline</text>
+    <text x="110" y="974" class="entity-field">    flight_number</text>
+    <text x="110" y="991" class="entity-field">    source</text>
+    <text x="110" y="1008" class="entity-field">    destination</text>
+    <text x="110" y="1025" class="entity-field">    departure_time</text>
+    <text x="110" y="1042" class="entity-field">    price</text>
+    <text x="110" y="1059" class="entity-field">    transient</text>
+  </g>
+  <!-- diamond -> flight -->
+  <line x1="370" y1="840" x2="300" y2="860" stroke="#b0bec5" stroke-width="2" marker-end="url(#arrow-grey)"/>
+  <text x="310" y="858" class="cardinality">*</text>
+
+  <!-- ===================== HOTEL ===================== -->
+  <g class="entity">
+    <rect x="860" y="860" width="200" height="210" rx="8" class="color-hotel"/>
+    <rect x="860" y="860" width="200" height="28" rx="8" class="header-hotel"/>
+    <rect x="860" y="880" width="200" height="8" class="header-hotel"/>
+    <text x="960" y="879" text-anchor="middle" class="entity-header">hotel</text>
+    <text x="870" y="906" class="entity-field pk">PK  hotel_id</text>
+    <text x="870" y="923" class="entity-field fk">FK  trip_id</text>
+    <text x="870" y="940" class="entity-field fk">FK  uid</text>
+    <text x="870" y="957" class="entity-field">    hotel_name</text>
+    <text x="870" y="974" class="entity-field">    location</text>
+    <text x="870" y="991" class="entity-field">    rating</text>
+    <text x="870" y="1008" class="entity-field">    price_per_night</text>
+    <text x="870" y="1025" class="entity-field">    amenities</text>
+    <text x="870" y="1042" class="entity-field">    room_type</text>
+    <text x="870" y="1059" class="entity-field">    transient</text>
+  </g>
+  <!-- diamond -> hotel -->
+  <line x1="790" y1="840" x2="870" y2="860" stroke="#bcaaa4" stroke-width="2" marker-end="url(#arrow-brown)"/>
+  <text x="845" y="858" class="cardinality">*</text>
+
+  <!-- ===================== LEGEND ===================== -->
+  <rect x="980" y="30" width="290" height="260" rx="8" fill="#1a1a2e" stroke="#e94560" stroke-width="1.5"/>
+  <text x="1125" y="55" text-anchor="middle" fill="#e94560" font-size="13" font-weight="bold">LEGEND</text>
+
+  <rect x="995" y="68" width="14" height="14" fill="#ffd700" rx="2"/>
+  <text x="1015" y="80" fill="#ccc" font-size="11">Primary Key (PK)</text>
+
+  <rect x="995" y="90" width="14" height="14" fill="#90caf9" rx="2"/>
+  <text x="1015" y="102" fill="#ccc" font-size="11">Foreign Key (FK)</text>
+
+  <polygon points="1002,118 1009,125 1002,132 995,125" fill="#e94560" stroke="#fff" stroke-width="1"/>
+  <text x="1015" y="129" fill="#ccc" font-size="11">Relationship (Diamond)</text>
+
+  <line x1="995" y1="148" x2="1040" y2="148" stroke="#e94560" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="1048" y="152" fill="#ccc" font-size="11">Data Flow (Arrow)</text>
+
+  <line x1="995" y1="168" x2="1040" y2="168" stroke="#90caf9" stroke-width="2" stroke-dasharray="6,3"/>
+  <text x="1048" y="172" fill="#ccc" font-size="11">1-to-1 Relationship</text>
+
+  <line x1="995" y1="188" x2="1040" y2="188" stroke="#ffcc80" stroke-width="2" stroke-dasharray="6,3"/>
+  <text x="1048" y="192" fill="#ccc" font-size="11">1-to-Many Relationship</text>
+
+  <text x="995" y="215" fill="#ffd700" font-size="11" font-weight="bold">1</text>
+  <text x="1015" y="215" fill="#ccc" font-size="11">= One side</text>
+  <text x="995" y="233" fill="#ffd700" font-size="11" font-weight="bold">*</text>
+  <text x="1015" y="233" fill="#ccc" font-size="11">= Many side</text>
+
+  <rect x="995" y="243" width="14" height="14" fill="#006064" rx="2" stroke="#80deea" stroke-width="1"/>
+  <text x="1015" y="255" fill="#ccc" font-size="11">AI Generated Entity</text>
+
+  <!-- ===================== CARDINALITY LABELS ON LINES ===================== -->
+  <text x="155" y="260" class="cardinality">1</text>
+  <text x="155" y="300" class="cardinality">*</text>
+  <text x="355" y="260" class="cardinality">1</text>
+  <text x="355" y="300" class="cardinality">*</text>
+  <text x="565" y="260" class="cardinality">1</text>
+  <text x="565" y="300" class="cardinality">*</text>
+  <text x="805" y="260" class="cardinality">1</text>
+  <text x="805" y="300" class="cardinality">*</text>
+
+</svg>
+
+<!-- Color key for entities -->
+<div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px; padding:20px; background:#1a1a2e;">
+  <div style="display:flex;align-items:center;gap:6px;"><div style="width:16px;height:16px;background:#1565c0;border-radius:3px;border:1px solid #90caf9"></div><span style="color:#ccc;font-size:12px">users</span></div>
+  <div style="display:flex;align-items:center;gap:6px;"><div style="width:16px;height:16px;background:#1b5e20;border-radius:3px;border:1px solid #a5d6a7"></div><span style="color:#ccc;font-size:12px">preferences</span></div>
+  <div style="display:flex;align-items:center;gap:6px;"><div style="width:16px;height:16px;background:#4a148c;border-radius:3px;border:1px solid #ce93d8"></div><span style="color:#ccc;font-size:12px">wishlist</span></div>
+  <div style="display:flex;align-items:center;gap:6px;"><div style="width:16px;height:16px;background:#e65100;border-radius:3px;border:1px solid #ffcc80"></div><span style="color:#ccc;font-size:12px">trips</span></div>
+  <div style="display:flex;align-items:center;gap:6px;"><div style="width:16px;height:16px;background:#880e4f;border-radius:3px;border:1px solid #f48fb1"></div><span style="color:#ccc;font-size:12px">chat_assistant</span></div>
+  <div style="display:flex;align-items:center;gap:6px;"><div style="width:16px;height:16px;background:#006064;border-radius:3px;border:1px solid #80deea"></div><span style="color:#ccc;font-size:12px">ai_trip_planner</span></div>
+  <div style="display:flex;align-items:center;gap:6px;"><div style="width:16px;height:16px;background:#37474f;border-radius:3px;border:1px solid #b0bec5"></div><span style="color:#ccc;font-size:12px">flight</span></div>
+  <div style="display:flex;align-items:center;gap:6px;"><div style="width:16px;height:16px;background:#3e2723;border-radius:3px;border:1px solid #bcaaa4"></div><span style="color:#ccc;font-size:12px">hotel</span></div>
+</div>
+
+</body>
+</html>

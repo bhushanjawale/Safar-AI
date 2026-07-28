@@ -1,0 +1,399 @@
+
+================================================================================
+                      SAFAR AI — ACTIVITY DIAGRAM
+================================================================================
+
+================================================================================
+  STEP 1 : APP ENTRY & AUTH STATE CHECK
+================================================================================
+
+                              ● START
+                               │
+                               ▼
+                    +---------------------+
+                    |  User Opens App     |
+                    |  (index.html / SPA) |
+                    +----------+----------+
+                               │
+                               ▼
+                    +---------------------+
+                    |  router.js checks   |
+                    |  Auth State         |
+                    |  (Firebase Auth)    |
+                    +----------+----------+
+                               │
+                    +----------+----------+
+                    │                     │
+              [Authenticated]       [Not Authenticated]
+                    │                     │
+                    ▼                     ▼
+         +------------------+   +----------------------+
+         |  isNewUser?      |   |  Login / Register    |
+         +--------+---------+   |  Page                |
+                  │             +----------+-----------+
+         +--------+--------+              │
+         │                 │   +----------+-----------+
+       [YES]              [NO] |  Email/Password      |
+         │                 │   |  OR Google OAuth     |
+         ▼                 │   +----------+-----------+
++------------------+       │             │
+|  ONBOARDING      |       │             ▼
+|  (5 Steps)       |       │   +----------------------+
+|  1. Location     |       │   |  Firebase Auth       |
+|  2. Budget       |       │   |  validates & returns |
+|  3. Trip Style   |       │   |  uid                 |
+|  4. Interests    |       │   +----------+-----------+
+|  5. Offbeat Pref |       │             │
++--------+---------+       │   +---------+---------+
+         │                 │   │                   │
+         ▼                 │ [New User]        [Existing]
++------------------+       │   │                   │
+|  Save Prefs to   |       │   ▼                   │
+|  Firestore       |       │  Onboarding ─────────►│
+|  isNewUser=false |       │                       │
++--------+---------+       │                       │
+         │                 │                       │
+         └────────+────────┘◄──────────────────────┘
+                  │
+                  ▼
+
+================================================================================
+  STEP 2 : DASHBOARD
+================================================================================
+
+       +---------------------------+
+       |        DASHBOARD          |
+       |  (Home Page)              |
+       |  - Personalized Recs      |
+       |  - Nearby Destinations    |
+       |  (via Gemini AI)          |
+       +-------------+-------------+
+                     │
+    +────────────────+────────────────────────────+
+    │                │              │              │
+    ▼                ▼              ▼              ▼
++--------+     +---------+   +----------+  +--------------+
+|  AI    |     | Flight  |   |  Hotel   |  | Destination  |
+| Trip   |     | Search  |   |  Search  |  |  Explorer    |
+| Planner|     +---------+   +----------+  +--------------+
++--------+
+
+================================================================================
+  STEP 3A : AI TRIP PLANNER FLOW
+================================================================================
+
+  USER INPUT
+  +---------------------------+
+  |  source city              |
+  |  destination              |
+  |  number of days           |
+  |  budget                   |
+  +---------------------------+
+               │
+               │ HTTP POST
+               ▼
+  +---------------------------+
+  |   Flask Backend           |
+  |   /api/itinerary/generate |
+  +---------------------------+
+               │
+               │ sends prompt
+               ▼
+  +---------------------------+
+  |  Google Gemini AI         |
+  |  (Streaming Response)     |
+  +---------------------------+
+               │
+               │ streams chunks
+               ▼
+  +---------------------------+
+  |  Day-wise Itinerary       |
+  |  displayed on UI          |
+  |  (flights, hotels,        |
+  |   activities, meals)      |
+  +---------------------------+
+               │
+        [Save Trip?]
+               │
+       +-------+-------+
+       │               │
+     [YES]            [NO]
+       │               │
+       ▼               ▼
+  +-----------+   +-----------+
+  | Save to   |   | Discard   |
+  | Firestore |   | (UI only) |
+  | trips/{id}|   +-----------+
+  | + itinerary
+  |   _data   |
+  +-----------+
+
+================================================================================
+  STEP 3B : FLIGHT SEARCH FLOW
+================================================================================
+
+  USER INPUT
+  +---------------------------+
+  |  source city              |
+  |  destination city         |
+  |  travel date              |
+  |  cabin class              |
+  |  passengers               |
+  +---------------------------+
+               │
+               │ HTTP POST
+               ▼
+  +---------------------------+
+  |   Flask Backend           |
+  |   /api/flights/search     |
+  +---------------------------+
+               │
+               │ sends prompt
+               ▼
+  +---------------------------+
+  |   Groq LLaMA 3.1 8B      |
+  |   (Flight Search Engine)  |
+  +---------------------------+
+               │
+               │ returns JSON
+               ▼
+  +---------------------------+
+  |  Flight Results           |
+  |  displayed on UI          |
+  |  ⚡ TRANSIENT — NOT saved |
+  +---------------------------+
+
+================================================================================
+  STEP 3C : HOTEL SEARCH FLOW
+================================================================================
+
+  USER INPUT
+  +---------------------------+
+  |  destination city         |
+  |  check-in / check-out     |
+  |  budget per night         |
+  |  guests / rooms           |
+  |  property type            |
+  +---------------------------+
+               │
+               │ HTTP POST
+               ▼
+  +---------------------------+
+  |   Flask Backend           |
+  |   /api/hotels/search      |
+  +---------------------------+
+               │
+               │ sends prompt
+               ▼
+  +---------------------------+
+  |   Groq LLaMA 3.1 8B      |
+  |   (Hotel Search Engine)   |
+  +---------------------------+
+               │
+               │ returns JSON
+               ▼
+  +---------------------------+
+  |  Hotel Results            |
+  |  displayed on UI          |
+  |  ⚡ TRANSIENT — NOT saved |
+  +---------------------------+
+
+================================================================================
+  STEP 3D : DESTINATION EXPLORER FLOW
+================================================================================
+
+  USER ACTION
+  +---------------------------+
+  |  Browse / Search /        |
+  |  Filter by Category       |
+  +---------------------------+
+               │
+               ▼
+  +---------------------------+
+  |   Pexels API              |
+  |   (Fetch Destination      |
+  |    Images)                |
+  +---------------------------+
+               │
+               ▼
+  +---------------------------+
+  |  Destination Cards        |
+  |  displayed on UI          |
+  +---------------------------+
+               │
+        [Add to Wishlist?]
+               │
+       +-------+-------+
+       │               │
+     [YES]            [NO]
+       │               │
+       ▼               ▼
+  +-----------+   +-----------+
+  | Toggle in |   | Continue  |
+  | Firestore |   | Browsing  |
+  | users.    |   +-----------+
+  | wishlist  |
+  +-----------+
+
+================================================================================
+  STEP 3E : CHAT ASSISTANT FLOW
+================================================================================
+
+  +---------------------------+
+  |  User types message       |
+  +---------------------------+
+               │
+               │ HTTP POST
+               ▼
+  +---------------------------+
+  |   Flask Backend           |
+  |   /api/chat               |
+  +---------------------------+
+               │
+       +-------+-------+
+       │               │
+  [Groq OK]       [Groq Fails]
+       │               │
+       ▼               ▼
+  +-----------+  +------------+
+  | Groq      |  | Gemini AI  |
+  | LLaMA 3.1 |  | (Fallback) |
+  | (Primary) |  +-----+------+
+  +-----+-----+        │
+        │              │
+        └──────+────────┘
+               │
+               ▼
+  +---------------------------+
+  |  AI Response              |
+  |  🧠 SESSION MEMORY ONLY   |
+  |  NOT persisted to         |
+  |  Firestore                |
+  +---------------------------+
+               │
+               ▼
+  +---------------------------+
+  |  Displayed in Chat UI     |
+  +---------------------------+
+
+================================================================================
+  STEP 4 : PROFILE & PREFERENCES
+================================================================================
+
+  +---------------------------+
+  |  User visits Profile Page |
+  +---------------------------+
+               │
+       +-------+-------+
+       │               │
+  [View Profile]  [Edit Profile]
+       │               │
+       ▼               ▼
+  +-----------+  +------------------+
+  | Read from |  | Update Firestore |
+  | Firestore |  | users/{uid}      |
+  | users/{uid}  | preferences      |
+  +-----------+  +------------------+
+
+================================================================================
+  STEP 5 : LOGOUT FLOW
+================================================================================
+
+  +---------------------------+
+  |  User clicks Logout       |
+  +---------------------------+
+               │
+               ▼
+  +---------------------------+
+  |  Firebase Auth signOut()  |
+  +---------------------------+
+               │
+               ▼
+  +---------------------------+
+  |  Clear session memory     |
+  |  Clear chat history       |
+  |  Reset auth state         |
+  +---------------------------+
+               │
+               ▼
+  +---------------------------+
+  |  Redirect to /login       |
+  +---------------------------+
+               │
+               ▼
+              ● END
+
+================================================================================
+  COMPLETE ACTIVITY FLOW SUMMARY
+================================================================================
+
+  [START]
+     │
+     ▼
+  Open App ──► Check Auth State (Firebase)
+     │
+     ├── [Not Auth] ──► Login / Register ──► Firebase Auth ──► uid
+     │                        │
+     │                 [New User] ──► Onboarding (5 steps) ──► Firestore
+     │                        │
+     └── [Auth] ─────────────►│
+                              ▼
+                         DASHBOARD
+                              │
+          ┌───────────────────┼──────────────────────┐
+          │                   │                      │
+          ▼                   ▼                      ▼
+   AI Trip Planner      Flight Search          Hotel Search
+   (Gemini Stream)      (Groq LLaMA)           (Groq LLaMA)
+          │                   │                      │
+          ▼                   ▼                      ▼
+   Save to Firestore    UI Only (Transient)    UI Only (Transient)
+          │
+          ├──► Destination Explorer ──► Pexels API ──► Wishlist (Firestore)
+          │
+          ├──► Chat Assistant ──► Groq (primary) / Gemini (fallback)
+          │                   └──► Session Memory Only
+          │
+          └──► Profile / Preferences ──► Firestore
+                              │
+                         [Logout]
+                              │
+                         Firebase signOut
+                              │
+                         Clear Session + Chat
+                              │
+                         Redirect /login
+                              │
+                           [END]
+
+================================================================================
+  PERSISTENCE SUMMARY
+================================================================================
+
+  ACTIVITY                  PERSISTED?    STORAGE           CLEARED?
+  ─────────────────────────────────────────────────────────────────────
+  Register / Login          YES           Firestore users   Never
+  Onboarding Preferences    YES           Firestore users   On update
+  AI Trip Itinerary         YES (if saved)Firestore trips   On delete
+  Flight Search Results     NO            UI / Transient    On navigate
+  Hotel Search Results      NO            UI / Transient    On navigate
+  Wishlist                  YES           Firestore users   On remove
+  Chat Messages             NO            Session Memory    On logout
+  Profile Updates           YES           Firestore users   On update
+
+================================================================================
+  AI ENGINE ROUTING
+================================================================================
+
+  FEATURE                   PRIMARY ENGINE     FALLBACK ENGINE
+  ─────────────────────────────────────────────────────────────
+  Itinerary Generation      Gemini AI          None (retries x3)
+  Recommendations           Gemini AI          Default static list
+  Nearby Destinations       Gemini AI          Default static list
+  Flight Search             Groq LLaMA 3.1     None
+  Hotel Search              Groq LLaMA 3.1     None
+  Chat Assistant            Groq LLaMA 3.1     Gemini AI
+
+================================================================================
+                      END OF SAFAR AI ACTIVITY DIAGRAM
+================================================================================

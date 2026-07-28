@@ -1,0 +1,246 @@
+
+================================================================================
+                      SAFAR AI — USE CASE DIAGRAM
+================================================================================
+
+================================================================================
+  ACTORS
+================================================================================
+
+  1. Guest User       — Unauthenticated visitor (not logged in)
+  2. Registered User  — Authenticated user (logged in)
+  3. New User         — Registered user completing onboarding
+  4. Firebase Auth    — External authentication system
+  5. Gemini AI        — Google Gemini 1.5 Flash (AI engine)
+  6. Groq AI          — Groq LLaMA 3.1 8B (AI engine)
+  7. Pexels API       — External image service
+  8. Firestore DB     — Firebase Firestore database
+
+================================================================================
+  USE CASE DIAGRAM
+================================================================================
+
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │                        SAFAR AI SYSTEM                                  │
+  │                                                                         │
+  │  ┌──────────────────────────────────────────────────────────────────┐   │
+  │  │                  AUTHENTICATION MODULE                           │   │
+  │  │                                                                  │   │
+  │  │   (UC-01) Register with Email & Password                         │   │
+  │  │   (UC-02) Login with Email & Password                            │   │
+  │  │   (UC-03) Login with Google OAuth                                │   │
+  │  │   (UC-04) Logout                                                 │   │
+  │  │   (UC-05) Manage Session                                         │   │
+  │  └──────────────────────────────────────────────────────────────────┘   │
+  │                                                                         │
+  │  ┌──────────────────────────────────────────────────────────────────┐   │
+  │  │                  ONBOARDING MODULE                               │   │
+  │  │                                                                  │   │
+  │  │   (UC-06) Set Home Location                                      │   │
+  │  │   (UC-07) Set Budget Range                                       │   │
+  │  │   (UC-08) Set Travel Style                                       │   │
+  │  │   (UC-09) Set Interests                                          │   │
+  │  │   (UC-10) Set Offbeat Preference                                 │   │
+  │  │   (UC-11) Save Preferences to Firestore                          │   │
+  │  └──────────────────────────────────────────────────────────────────┘   │
+  │                                                                         │
+  │  ┌──────────────────────────────────────────────────────────────────┐   │
+  │  │                  AI TRIP PLANNER MODULE                          │   │
+  │  │                                                                  │   │
+  │  │   (UC-12) Enter Trip Details (destination, days, budget)         │   │
+  │  │   (UC-13) Generate AI Itinerary (streaming)                      │   │
+  │  │   (UC-14) View Day-wise Itinerary                                │   │
+  │  │   (UC-15) Save Trip to Firestore                                 │   │
+  │  │   (UC-16) View Saved Trips                                       │   │
+  │  │   (UC-17) Delete Saved Trip                                      │   │
+  │  └──────────────────────────────────────────────────────────────────┘   │
+  │                                                                         │
+  │  ┌──────────────────────────────────────────────────────────────────┐   │
+  │  │                  FLIGHT SEARCH MODULE                            │   │
+  │  │                                                                  │   │
+  │  │   (UC-18) Enter Flight Search (source, dest, date, class)        │   │
+  │  │   (UC-19) Search Flights via Groq AI                             │   │
+  │  │   (UC-20) View Flight Results                                    │   │
+  │  │   (UC-21) Select Flight (transient, UI only)                     │   │
+  │  └──────────────────────────────────────────────────────────────────┘   │
+  │                                                                         │
+  │  ┌──────────────────────────────────────────────────────────────────┐   │
+  │  │                  HOTEL SEARCH MODULE                             │   │
+  │  │                                                                  │   │
+  │  │   (UC-22) Enter Hotel Search (city, dates, budget)               │   │
+  │  │   (UC-23) Search Hotels via Groq AI                              │   │
+  │  │   (UC-24) View Hotel Results                                     │   │
+  │  │   (UC-25) Select Hotel (transient, UI only)                      │   │
+  │  └──────────────────────────────────────────────────────────────────┘   │
+  │                                                                         │
+  │  ┌──────────────────────────────────────────────────────────────────┐   │
+  │  │                  DESTINATION EXPLORER MODULE                     │   │
+  │  │                                                                  │   │
+  │  │   (UC-26) Browse Destinations                                    │   │
+  │  │   (UC-27) Search Destination by Name                             │   │
+  │  │   (UC-28) Filter by Category                                     │   │
+  │  │   (UC-29) View Destination Details                               │   │
+  │  │   (UC-30) Add to Wishlist                                        │   │
+  │  │   (UC-31) Remove from Wishlist                                   │   │
+  │  │   (UC-32) View Wishlist                                          │   │
+  │  └──────────────────────────────────────────────────────────────────┘   │
+  │                                                                         │
+  │  ┌──────────────────────────────────────────────────────────────────┐   │
+  │  │                  CHAT ASSISTANT MODULE                           │   │
+  │  │                                                                  │   │
+  │  │   (UC-33) Send Message to AI Assistant                           │   │
+  │  │   (UC-34) Receive AI Response (Groq primary)                     │   │
+  │  │   (UC-35) Fallback to Gemini if Groq unavailable                 │   │
+  │  │   (UC-36) View Chat History (session only)                       │   │
+  │  │   (UC-37) Clear Chat on Logout                                   │   │
+  │  └──────────────────────────────────────────────────────────────────┘   │
+  │                                                                         │
+  │  ┌──────────────────────────────────────────────────────────────────┐   │
+  │  │                  PROFILE MODULE                                  │   │
+  │  │                                                                  │   │
+  │  │   (UC-38) View Profile                                           │   │
+  │  │   (UC-39) Edit Profile Details                                   │   │
+  │  │   (UC-40) Update Travel Preferences                              │   │
+  │  └──────────────────────────────────────────────────────────────────┘   │
+  │                                                                         │
+  │  ┌──────────────────────────────────────────────────────────────────┐   │
+  │  │                  RECOMMENDATIONS MODULE                          │   │
+  │  │                                                                  │   │
+  │  │   (UC-41) Get Personalized Recommendations (Gemini)              │   │
+  │  │   (UC-42) Get Nearby Destinations (Gemini)                       │   │
+  │  │   (UC-43) View Deals & Offers                                    │   │
+  │  └──────────────────────────────────────────────────────────────────┘   │
+  │                                                                         │
+  └─────────────────────────────────────────────────────────────────────────┘
+
+================================================================================
+  ACTOR ↔ USE CASE MAPPING
+================================================================================
+
+  ┌─────────────────┬────────────────────────────────────────────────────────┐
+  │ ACTOR           │ USE CASES                                              │
+  ├─────────────────┼────────────────────────────────────────────────────────┤
+  │ Guest User      │ UC-01 Register with Email & Password                   │
+  │                 │ UC-02 Login with Email & Password                      │
+  │                 │ UC-03 Login with Google OAuth                          │
+  ├─────────────────┼────────────────────────────────────────────────────────┤
+  │ New User        │ UC-06 Set Home Location                                │
+  │ (after register)│ UC-07 Set Budget Range                                 │
+  │                 │ UC-08 Set Travel Style                                 │
+  │                 │ UC-09 Set Interests                                    │
+  │                 │ UC-10 Set Offbeat Preference                           │
+  │                 │ UC-11 Save Preferences to Firestore                    │
+  ├─────────────────┼────────────────────────────────────────────────────────┤
+  │ Registered User │ UC-04 Logout                                           │
+  │                 │ UC-05 Manage Session                                   │
+  │                 │ UC-12 Enter Trip Details                               │
+  │                 │ UC-13 Generate AI Itinerary                            │
+  │                 │ UC-14 View Day-wise Itinerary                          │
+  │                 │ UC-15 Save Trip to Firestore                           │
+  │                 │ UC-16 View Saved Trips                                 │
+  │                 │ UC-17 Delete Saved Trip                                │
+  │                 │ UC-18 Enter Flight Search                              │
+  │                 │ UC-20 View Flight Results                              │
+  │                 │ UC-21 Select Flight                                    │
+  │                 │ UC-22 Enter Hotel Search                               │
+  │                 │ UC-24 View Hotel Results                               │
+  │                 │ UC-25 Select Hotel                                     │
+  │                 │ UC-26 Browse Destinations                              │
+  │                 │ UC-27 Search Destination by Name                       │
+  │                 │ UC-28 Filter by Category                               │
+  │                 │ UC-29 View Destination Details                         │
+  │                 │ UC-30 Add to Wishlist                                  │
+  │                 │ UC-31 Remove from Wishlist                             │
+  │                 │ UC-32 View Wishlist                                    │
+  │                 │ UC-33 Send Message to AI Assistant                     │
+  │                 │ UC-36 View Chat History                                │
+  │                 │ UC-38 View Profile                                     │
+  │                 │ UC-39 Edit Profile Details                             │
+  │                 │ UC-40 Update Travel Preferences                        │
+  │                 │ UC-41 Get Personalized Recommendations                 │
+  │                 │ UC-42 Get Nearby Destinations                          │
+  │                 │ UC-43 View Deals & Offers                              │
+  ├─────────────────┼────────────────────────────────────────────────────────┤
+  │ Firebase Auth   │ UC-01 Register (creates uid)                           │
+  │                 │ UC-02 Login (validates credentials)                    │
+  │                 │ UC-03 Google OAuth (returns uid)                       │
+  │                 │ UC-04 Logout (clears session)                          │
+  │                 │ UC-05 Manage Session (token refresh)                   │
+  ├─────────────────┼────────────────────────────────────────────────────────┤
+  │ Gemini AI       │ UC-13 Generate AI Itinerary (streaming)                │
+  │                 │ UC-35 Fallback Chat Response                           │
+  │                 │ UC-41 Personalized Recommendations                     │
+  │                 │ UC-42 Nearby Destinations                              │
+  ├─────────────────┼────────────────────────────────────────────────────────┤
+  │ Groq AI         │ UC-19 Search Flights                                   │
+  │                 │ UC-23 Search Hotels                                    │
+  │                 │ UC-34 Primary Chat Response                            │
+  ├─────────────────┼────────────────────────────────────────────────────────┤
+  │ Pexels API      │ UC-26 Browse Destinations (fetch images)               │
+  │                 │ UC-29 View Destination Details (fetch images)          │
+  ├─────────────────┼────────────────────────────────────────────────────────┤
+  │ Firestore DB    │ UC-11 Save Preferences                                 │
+  │                 │ UC-15 Save Trip                                        │
+  │                 │ UC-16 View Saved Trips (read)                          │
+  │                 │ UC-17 Delete Saved Trip                                │
+  │                 │ UC-30 Add to Wishlist                                  │
+  │                 │ UC-31 Remove from Wishlist                             │
+  │                 │ UC-32 View Wishlist (read)                             │
+  │                 │ UC-38 View Profile (read)                              │
+  │                 │ UC-39 Edit Profile (write)                             │
+  │                 │ UC-40 Update Preferences (write)                       │
+  └─────────────────┴────────────────────────────────────────────────────────┘
+
+================================================================================
+  INCLUDE / EXTEND RELATIONSHIPS
+================================================================================
+
+  <<include>> — always triggered as part of another use case
+  <<extend>>  — optionally triggered under certain conditions
+
+  UC-01 Register          <<include>>  UC-11 Save Preferences (after onboarding)
+  UC-02 Login             <<include>>  UC-05 Manage Session
+  UC-03 Google OAuth      <<include>>  UC-05 Manage Session
+  UC-13 Generate Itinerary<<include>>  UC-12 Enter Trip Details
+  UC-15 Save Trip         <<include>>  UC-13 Generate Itinerary
+  UC-19 Search Flights    <<include>>  UC-18 Enter Flight Search
+  UC-23 Search Hotels     <<include>>  UC-22 Enter Hotel Search
+  UC-34 Groq Chat         <<include>>  UC-33 Send Message
+  UC-41 Recommendations   <<include>>  UC-11 Save Preferences (uses prefs)
+
+  UC-35 Gemini Fallback   <<extend>>   UC-34 Groq Chat (only if Groq fails)
+  UC-30 Add to Wishlist   <<extend>>   UC-29 View Destination Details
+  UC-17 Delete Trip       <<extend>>   UC-16 View Saved Trips
+  UC-37 Clear Chat        <<extend>>   UC-04 Logout
+
+================================================================================
+  USE CASE FLOW SUMMARY
+================================================================================
+
+  GUEST
+    │
+    ├──► Register ──► Onboarding ──► Dashboard
+    │
+    └──► Login ──────────────────► Dashboard
+              (Email / Google)
+                                       │
+                    ┌──────────────────┼──────────────────┐
+                    │                  │                   │
+                    ▼                  ▼                   ▼
+             AI Trip Planner    Flight Search       Hotel Search
+             (Gemini stream)    (Groq AI)           (Groq AI)
+                    │
+                    ▼
+             Save Trip ──► Firestore
+                    │
+                    ├──► Destination Explorer ──► Wishlist
+                    │    (Pexels images)
+                    │
+                    ├──► Chat Assistant ──► Groq (primary)
+                    │                  └──► Gemini (fallback)
+                    │
+                    └──► Profile / Preferences ──► Firestore
+
+================================================================================
+                      END OF SAFAR AI USE CASE DIAGRAM
+================================================================================
